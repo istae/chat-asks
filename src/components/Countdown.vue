@@ -1,9 +1,7 @@
 <template>
   <div id="countdown">
     <div id="countdown-number">{{ counter }}</div>
-    <svg>
-      <circle r="36" cx="40" cy="40"></circle>
-    </svg>
+      <svg v-if="showAnimation"><circle :style="{'animation-duration': animationDuration }" r="36" cx="40" cy="40"></circle></svg>
   </div>
 </template>
 
@@ -12,15 +10,22 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Countdown",
+
+  props: {
+    time: Number
+  },
+
   data() {
-    let counter = 20;
     return {
-      counter,
-      animation: `countdown ${counter}s linear forwards;`,
+      counter: this.time,
+      animationDuration: `${this.time}s`,
+      showAnimation: false,
     };
   },
 
   mounted() {
+    this.showAnimation = true;
+
     let timer = setInterval(() => {
       this.counter--;
     }, 1000);
@@ -64,7 +69,10 @@ circle {
   stroke-width: 4px;
   stroke: #424242;
   fill: none;
-  animation: countdown 20s linear forwards;
+  animation-name: countdown;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  // animation-duration: 20s;
 }
 
 @keyframes countdown {

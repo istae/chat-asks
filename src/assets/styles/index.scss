@@ -1,36 +1,51 @@
 @import url("https://fonts.googleapis.com/css?family=Mitr");
 
-* , *:before, *:after{ 
-     box-sizing:border-box; 
-   }
+$green: #06d6a0;
+$red: #ff006e;
+$purple: #8338ec;
+$blue: #3a86ff;
+$yellow: #ffbe0b;
+$orange: #fb5607;
 
-html, body {
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+html,
+body {
     background-color: #f2f2f2;
     height: 100%;
     margin: 0;
     font-family: "Mitr", sans-serif;
 }
 
+.center {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .red-box {
-    background-color: #ff006e;
+    background-color: $red;
 }
 
 .purple-box {
-    background-color: #8338ec;
+    background-color: $purple;
 }
 
 .blue-box {
-    background-color: #3a86ff;
+    background-color: $blue;
 }
 
 .yellow-box {
-    background-color: #ffbe0b;
+    background-color: $yellow;
 }
 
 .orange-box {
-    background-color: #fb5607;
+    background-color: $orange;
 }
-
 
 .h-full {
     height: 100%;

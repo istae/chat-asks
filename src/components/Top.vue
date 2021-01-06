@@ -2,10 +2,10 @@
   <div class="center h-full">
     <div class="center answer-wrapper">
       <h2>Correct Answer</h2>
-      <div class="answer">D) More "Try it Yourself" examples below.</div>
+      <div class="answer" v-html="letter + ') ' + answer"></div>
     </div>
 
-    <h2>Top 5</h2>
+    <h2>Top 5 Users</h2>
     <div class="list">
       <div class="list-item" v-for="user in users" :key="user.username">
         <div>{{ user.username }}</div>
@@ -22,10 +22,18 @@ export default Vue.extend({
   name: "Top",
 
   props: {
+    answer: {
+      type: String,
+    },
+    letter: {
+      type: String,
+    },
     users: {
       type: Array,
     },
   },
+
+  mounted() {},
 
   data() {
     return {};
@@ -34,7 +42,6 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-$green: #06d6a0;
 
 .answer-wrapper {
   margin-bottom: 100px;

@@ -4,12 +4,20 @@
       Question {{ questionNumber }}/{{ maxQuestions }}
     </div>
 
+    <Winner v-if="showCredits" :time="creditsDuration" :users="users"></Winner>
+
     <Question
       v-if="showQuestion"
-      v-bind:question="question"
-      v-bind:answers="answers"
+      :time="questionDuration"
+      :question="question"
+      :answers="answers"
     ></Question>
-    <Top v-if="showTop" v-bind:users="users"></Top>
+    <Top
+      v-if="showTop"
+      :users="users"
+      :letter="correctLetter.toUpperCase()"
+      :answer="correctAnswer"
+    ></Top>
   </div>
 </template>
 
@@ -17,98 +25,99 @@
 import Vue from "vue";
 import Question from "./components/Question.vue";
 import Top from "./components/Top.vue";
+import Winner from "./components/Winner.vue";
+import { sleep, shuffle } from "./util/util";
+import { Game, UserScore } from "./util/game";
 
-function shuffle(array: any[]) {
-  console.log(array);
-
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-
-  return array;
-}
-
-function sleep(sec: number) {
-  return new Promise((res, rej) => {
-    setTimeout(() => {
-      res(0);
-    }, sec * 1000);
-  });
-}
+const game = new Game();
 
 export default Vue.extend({
   name: "App",
   components: {
     Question,
     Top,
+    Winner,
   },
 
   data() {
-    let answers = shuffle([1, 2, 3, 4]);
-
     return {
       question: "Unable to disable Vetur in VSCode",
-      answers: shuffle(answers),
-      correctIndex: answers.indexOf(1),
-      states: { in_game: 0, waiting: 1 },
-      questionNumber: 1,
-      maxQuestions: 20,
+      answers: [],
       state: 0,
+      states: { in_game: 0, credits: 1 },
+      correctLetter: "a",
+      correctAnswer: "",
+      questionNumber: 1,
+      questionDuration: 15,
+      topDuration: 7,
+      creditsDuration: 60,
+      maxQuestions: 20,
       showTop: false,
       showQuestion: false,
-      users: [
-        {
-          username: "kahoot1",
-          score: 230,
-        },
-        {
-          username: "kahoot2",
-          score: 230,
-        },
-        {
-          username: "kahoot3",
-          score: 230,
-        },
-      ],
+      showCredits: false,
+      users: Array<UserScore>(),
     };
   },
 
   methods: {
     async gameLoop() {
       while (true) {
-        // 1) show join screen
 
-        // 2) prepare 20 questions
+        this.showCredits = true;
+        this.state = this.states.credits;
+        await sleep(this.creditsDuration);
+        this.showCredits = false;
+
+        this.state = this.states.in_game;
+
+        const questions = await game.questions(this.maxQuestions);
+        game.startGame(this.questionDuration);
 
         this.questionNumber = 1;
-        while (this.questionNumber <= this.maxQuestions) {
-          this.showQuestion = true;
 
-          await sleep(2);
+        while (this.questionNumber <= this.maxQuestions) {
+          const randQuestion = questions[this.questionNumber - 1];
+          this.question = randQuestion.question;
+
+          const answers = shuffle([
+            randQuestion.correct_answer,
+            ...randQuestion.incorrect_answers,
+          ]) as any;
+          this.correctLetter = String.fromCharCode(
+            answers.indexOf(randQuestion.correct_answer) + 97
+          );
+          this.answers = answers;
+          this.correctAnswer = decodeURI(randQuestion.correct_answer);
+
+          game.startQuestion(this.correctLetter);
+          this.showQuestion = true;
+          await sleep(this.questionDuration);
+          game.endQuestion();
+
+          this.users = await game.topUsers(5);
           this.showQuestion = false;
           this.showTop = true;
+          await sleep(this.topDuration);
 
-          await sleep(1);
           this.showTop = false;
-
           this.questionNumber++;
         }
 
-        // 3) end game score, cheer
+        this.users = await game.topUsers(3);
       }
     },
   },
 
-  async mounted() {
-    this.showQuestion = true;
+  created() {
     this.gameLoop();
   },
+
+  async mounted() {},
 });
 </script>
 
 <style lang="scss">
-@import "assets/styles";
+@import "/assets/styles";
 
 .question-counter {
   text-align: center;

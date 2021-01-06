@@ -1,23 +1,23 @@
 <template>
   <div class="wrapper h-full">
-    <div class="question-wrapper">{{ question }}</div>
+    <div class="question-wrapper" v-html="question"></div>
 
     <div class="countdown mt-10">
-      <Countdown></Countdown>
+      <Countdown :time="time"></Countdown>
     </div>
 
     <div class="answers">
       <div class="answer-wrapper mb-10">
-        <div class="answer yellow-box mr-10">A) {{ answers[0] }}</div>
+        <div class="answer yellow-box mr-10" v-html="'A) ' + answers[0]"></div>
       </div>
       <div class="answer-wrapper mb-10">
-        <div class="answer blue-box">B) {{ answers[1] }}</div>
+        <div class="answer blue-box" v-html="'B) ' + answers[1]"></div>
       </div>
-      <div class="answer-wrapper">
-        <div class="answer red-box mr-10">C) {{ answers[2] }}</div>
+      <div class="answer-wrapper" v-if="answers.length > 2">
+        <div class="answer red-box mr-10" v-html="'C) ' + answers[2]"></div>
       </div>
-      <div class="answer-wrapper">
-        <div class="answer purple-box">D) {{ answers[3] }}</div>
+      <div class="answer-wrapper" v-if="answers.length > 2">
+        <div class="answer purple-box" v-html="'D) ' + answers[3]"></div>
       </div>
     </div>
   </div>
@@ -36,7 +36,10 @@ export default Vue.extend({
     },
     answers: {
       type: Array,
-    }
+    },
+    time: {
+      type: Number,
+    },
   },
 
   mounted() {
@@ -57,7 +60,6 @@ export default Vue.extend({
 }
 
 .countdown {
-  // margin: 50px 0;
   display: flex;
   justify-content: center;
 }
@@ -75,7 +77,6 @@ export default Vue.extend({
 }
 
 .answers {
-  // margin-top: 20px;
   width: 100%;
   color: #fff;
   display: flex;
