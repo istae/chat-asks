@@ -73,7 +73,7 @@ export default Vue.extend({
 .answer-wrapper {
   display: flex;
   width: 50%;
-  font-size: 24px;
+  font-size: 32px;
 }
 
 .answers {

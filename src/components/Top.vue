@@ -52,7 +52,7 @@ export default Vue.extend({
   background-color: $green;
   color: #fff;
   border-radius: 5px;
-  font-size: 24px;
+  font-size: 32px;
 }
 
 .center {
@@ -73,7 +73,7 @@ export default Vue.extend({
   justify-content: space-between;
   padding: 15px;
   border-bottom: 1px solid rgb(179, 179, 179);
-  font-size: 20px;
+  font-size: 32px;
 }
 
 .list-item:first-child {

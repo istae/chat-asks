@@ -62,9 +62,11 @@ export default Vue.extend({
   methods: {
     async gameLoop() {
       while (true) {
-
         this.showCredits = true;
         this.state = this.states.credits;
+        if (this.users.length) {
+          game.sendMessage(`5Head ${this.users[0].username} 5Head`);
+        }
         await sleep(this.creditsDuration);
         this.showCredits = false;
 
@@ -87,12 +89,15 @@ export default Vue.extend({
             answers.indexOf(randQuestion.correct_answer) + 97
           );
           this.answers = answers;
-          this.correctAnswer = decodeURI(randQuestion.correct_answer);
+          this.correctAnswer = randQuestion.correct_answer;
 
           game.startQuestion(this.correctLetter);
           this.showQuestion = true;
           await sleep(this.questionDuration);
+          await sleep(3)// acount stream delay;
           game.endQuestion();
+
+          if (this.questionNumber === this.maxQuestions) break;
 
           this.users = await game.topUsers(5);
           this.showQuestion = false;
@@ -103,6 +108,8 @@ export default Vue.extend({
           this.questionNumber++;
         }
 
+        this.showQuestion = false;
+        this.showTop = false;
         this.users = await game.topUsers(3);
       }
     },

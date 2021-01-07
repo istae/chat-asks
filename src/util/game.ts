@@ -7,6 +7,7 @@ enum MsgTypes {
     gameEnd = "gameEnd",
     topUsers = "topUsers",
     questions = "questions",
+    chat = "chat"
 };
 
 interface OpentdbQuestion {
@@ -46,7 +47,6 @@ export class Game {
     topUsers(n: number) {
         return new Promise((res, rej) => {
             this.socket.emit(MsgTypes.topUsers, n, (data: any) => {
-                console.log(data)
                 res(data)
             });
         }) as Promise<UserScore[]>;
@@ -55,9 +55,12 @@ export class Game {
     questions(n: number) {
         return new Promise((res, rej) => {
             this.socket.emit(MsgTypes.questions, n, (data: any) => {
-                console.log(data)
                 res(data)
             });
         }) as Promise<OpentdbQuestion[]>;
+    }
+
+    sendMessage(msg: string) {
+        this.socket.emit(MsgTypes.chat, msg);
     }
 }

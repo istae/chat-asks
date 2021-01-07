@@ -1,7 +1,7 @@
 <template>
   <div class="center h-full wrapper">
     <div v-for="n in 75" :key="n" :class="'confetti-' + n">
-      <img src="../assets/images/pog.png" />
+      <img src="../assets/images/5head.png" />
     </div>
 
     <div class="center timer">
@@ -12,7 +12,7 @@
     <div v-if="users.length" class="center first">
       1st Place
       <div class="winner first-place">
-        {{ users[0].username }} - {{ users[0].username }}
+        {{ users[0].username }} - {{ users[0].score }}
       </div>
     </div>
 
@@ -20,13 +20,13 @@
       <div class="center" v-if="users.length >= 2">
         2nd Place
         <div class="winner second-place">
-          {{ users[1].username }} - {{ users[1].username }}
+          {{ users[1].username }} - {{ users[1].score }}
         </div>
       </div>
       <div class="center" v-if="users.length >= 3">
         3rd Place
         <div class="winner third-place">
-          {{ users[2].username }} - {{ users[2].username }}
+          {{ users[2].username }} - {{ users[2].score }}
         </div>
       </div>
     </div>
